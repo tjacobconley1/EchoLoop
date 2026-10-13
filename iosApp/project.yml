@@ -1,0 +1,51 @@
+name: EchoLoop
+options:
+  bundleIdPrefix: com.conley
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    PRODUCT_BUNDLE_IDENTIFIER: com.conley.game
+    PRODUCT_NAME: EchoLoop
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    # Where the Kotlin build puts Shared.framework (see the build phase below).
+    FRAMEWORK_SEARCH_PATHS: "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)"
+    OTHER_LDFLAGS: "$(inherited) -framework Shared"
+targets:
+  EchoLoop:
+    type: application
+    platform: iOS
+    sources:
+      - iosApp
+    info:
+      path: iosApp/Info.plist
+      properties:
+        CFBundleDisplayName: Echo Loop
+        UILaunchScreen: {}
+        # Required by Compose Multiplatform on iPhone (lets it render at 120 Hz); it checks for this at startup.
+        CADisableMinimumFrameDurationOnPhone: true
+        UIRequiresFullScreen: true
+        UIStatusBarHidden: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    preBuildScripts:
+      - name: Build Kotlin framework
+        basedOnDependencyAnalysis: false
+        script: |
+          # Xcode does not inherit your shell's Java; fall back to the JDK bundled with Android Studio.
+          if [ -z "$JAVA_HOME" ] || [ ! -x "$JAVA_HOME/bin/java" ]; then
+            export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+          fi
+          cd "$SRCROOT/.."
+          ./gradlew :shared:embedAndSignAppleFrameworkForXcode
+
+
+

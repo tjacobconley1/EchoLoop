@@ -23,6 +23,20 @@ internal const val KEY_SCORE = "run_score"
 internal const val KEY_NAME = "player_name"
 internal const val KEY_MUTED = "sound_muted"
 internal const val KEY_SCORES = "high_scores"
+internal const val KEY_DONE = "levels_done"
+
+/** Which levels the current player has completed, saved as a comma-separated list of zero-based indices. */
+internal object Progress {
+    fun load(store: KeyValueStore): Set<Int> =
+        store.getString(KEY_DONE, "").split(',').mapNotNull { it.toIntOrNull() }.toSet()
+
+    fun markDone(store: KeyValueStore, level: Int) {
+        val done = load(store)
+        if (level !in done) store.putString(KEY_DONE, (done + level).sorted().joinToString(","))
+    }
+
+    fun clear(store: KeyValueStore) = store.putString(KEY_DONE, "")
+}
 
 internal class ScoreEntry(val name: String, val score: Int, val level: Int)
 
@@ -47,4 +61,5 @@ internal object Scores {
         store.putString(KEY_SCORES, all.joinToString(";") { "${it.name}|${it.score}|${it.level}" })
     }
 }
+
 

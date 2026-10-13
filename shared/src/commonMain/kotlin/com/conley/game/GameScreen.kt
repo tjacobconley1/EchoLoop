@@ -48,7 +48,7 @@ private const val BOTTOM_FRACTION = 0.20f
 private const val JUMP_BUFFER_TICKS = 8
 
 @Composable
-internal fun GameScreen(store: KeyValueStore, onScores: () -> Unit, onChangeName: () -> Unit, onHome: () -> Unit, sounds: SoundPlayer = NoSound) {
+internal fun GameScreen(store: KeyValueStore, onScores: () -> Unit, onLevels: () -> Unit, onChangeName: () -> Unit, onHome: () -> Unit, sounds: SoundPlayer = NoSound) {
     val timeState = rememberTimeState()
     var levelIndex by remember { mutableIntStateOf(store.getInt(KEY_LEVEL, 0).coerceIn(0, LevelCatalog.count - 1)) }
     var session by remember { mutableStateOf(LoopSession(LevelCatalog.get(levelIndex).level)) }
@@ -89,6 +89,7 @@ internal fun GameScreen(store: KeyValueStore, onScores: () -> Unit, onChangeName
     fun restartGame() {
         Scores.submit(store, store.getString(KEY_NAME, ""), score, levelIndex + 1)
         setScore(0)
+        Progress.clear(store)
         loadLevel(0)
     }
 
@@ -128,6 +129,7 @@ internal fun GameScreen(store: KeyValueStore, onScores: () -> Unit, onChangeName
                         when {
                             s.solved -> {
                                 sfx(Sound.Portal)
+                                Progress.markDone(store, levelIndex)
                                 val points = (1000 - levelTicks - 75 * levelDeaths).coerceAtLeast(100)
                                 setScore(score + points)
                                 val next = levelIndex + 1
@@ -341,6 +343,7 @@ internal fun GameScreen(store: KeyValueStore, onScores: () -> Unit, onChangeName
                 "Skip level" to {
                     if (levelIndex + 1 < LevelCatalog.count) { loadLevel(levelIndex + 1); flash("Skipped — no points") }
                 },
+                "Level select" to { onLevels() },
                 "Main menu" to { onHome() },
                 "Restart game" to { restartGame(); flash("New game started") },
                 (if (muted) "Sound: off" else "Sound: on") to { muted = !muted; store.putInt(KEY_MUTED, if (muted) 1 else 0) },
@@ -364,17 +367,4 @@ internal fun GameScreen(store: KeyValueStore, onScores: () -> Unit, onChangeName
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 

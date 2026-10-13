@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 
-private enum class Screen { Splash, Title, Who, Name, Game, Scores }
+private enum class Screen { Splash, Title, Who, Name, Game, Scores, Levels }
 
 /** Root of the shared UI. [store] keeps level progress, the player's name and the high scores. */
 @Composable
@@ -23,7 +23,7 @@ fun App(store: KeyValueStore = InMemoryStore(), sounds: SoundPlayer = NoSound) {
     // Back button (Android): from any inner screen go to the main screen; on the main screen it exits the app.
     PlatformBackHandler(enabled = screen != Screen.Title && screen != Screen.Splash) {
         previousPlayer = null
-        screen = Screen.Title
+        screen = if (screen == Screen.Levels) Screen.Game else Screen.Title
     }
 
     // Keep content clear of the status bar, notches and navigation bar.
@@ -54,15 +54,25 @@ fun App(store: KeyValueStore = InMemoryStore(), sounds: SoundPlayer = NoSound) {
                         Scores.submit(store, old, store.getInt(KEY_SCORE, 0), store.getInt(KEY_LEVEL, 0) + 1)
                         store.putInt(KEY_SCORE, 0)
                         store.putInt(KEY_LEVEL, 0)
+                        Progress.clear(store)
                     }
                     previousPlayer = null
                     screen = Screen.Game
                 },
             )
             Screen.Scores -> ScoresScreen(store, onBack = { screen = Screen.Title })
+            Screen.Levels -> LevelSelectScreen(
+                store,
+                onPick = { index ->
+                    store.putInt(KEY_LEVEL, index)
+                    screen = Screen.Game
+                },
+                onBack = { screen = Screen.Game },
+            )
             Screen.Game -> GameScreen(
                 store,
                 onScores = { screen = Screen.Scores },
+                onLevels = { screen = Screen.Levels },
                 onChangeName = { screen = Screen.Name },
                 onHome = { screen = Screen.Title },
                 sounds = sounds,
@@ -70,5 +80,8 @@ fun App(store: KeyValueStore = InMemoryStore(), sounds: SoundPlayer = NoSound) {
         }
     }
 }
+
+
+
 
 

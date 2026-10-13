@@ -4,6 +4,10 @@ A casual puzzle-platformer for **Android** and **iOS**, built with **Kotlin Mult
 **Compose Multiplatform**. One shared codebase, all art drawn in code, all sounds synthesised in code.
 No ads and no in-app purchases.
 
+<p align="center">
+  <img src="docs/gameplay.gif" alt="Echo Loop gameplay on iOS" width="720">
+</p>
+
 ## How the game works
 
 You guide a little character through side-view rooms to the glowing exit portal. The twist: **you cooperate with

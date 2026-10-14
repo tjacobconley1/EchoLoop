@@ -31,7 +31,7 @@ android {
         applicationId = "com.conley.echoloop"
         minSdk = 24
         targetSdk = 37
-        versionCode = 2
+        versionCode = 4
         versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -39,10 +39,13 @@ android {
 
     buildTypes {
         release {
+            // Native debug symbols so Play Console can symbolicate native crashes and ANRs.
+            ndk { debugSymbolLevel = "SYMBOL_TABLE" }
             signingConfigs.findByName("release")?.let { signingConfig = it }
+            // R8 minification is off: with it on, the release build crashed at startup
+            // (IllegalAccessError on repackaged kotlin.collections classes). The app is small, so size is not a concern.
             optimization {
-                enable = true
-                packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
+                enable = false
             }
         }
     }

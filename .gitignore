@@ -23,3 +23,6 @@ DerivedData/
 .gradle/
 local.properties
 .DS_Store
+keystore.properties
+*.jks
+*.keystore

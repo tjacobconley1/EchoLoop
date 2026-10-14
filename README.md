@@ -52,7 +52,7 @@ shared/     All game code (Kotlin Multiplatform)
 iosApp/     iOS app. Xcode project is generated from project.yml with XcodeGen.
 ```
 
-Package / bundle id: `com.conley.game`.
+Application id / bundle id: `com.conley.echoloop` (the Kotlin code and Android namespace stay under `com.conley.game`).
 
 Physics runs on a fixed-point integer simulation at 60 ticks per second, so ghosts replay runs exactly.
 

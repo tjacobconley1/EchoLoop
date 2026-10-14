@@ -1,7 +1,7 @@
 # Echo Loop — project context
 
 Casual puzzle-platformer for Android and iOS, built with Kotlin Multiplatform + Compose Multiplatform.
-No ads and no in-app purchases (by design). Package / bundle id: `com.conley.game` (deliberately not renamed).
+No ads and no in-app purchases (by design). Application id / bundle id: `com.conley.echoloop` (Kotlin code and Android namespace stay `com.conley.game`).
 
 ## Game concept
 - Side-view rooms. The character **only runs while the player holds** (left half of screen), always in its facing

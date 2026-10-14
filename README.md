@@ -68,6 +68,9 @@ For iOS (macOS only):
 
 ## Run on Android
 
+> **Setup:** the Android build uses Firebase Crashlytics and needs `app/google-services.json` (download it from the Firebase
+> console for package `com.conley.echoloop`). The file is git-ignored, so add it after cloning.
+
 **Android Studio**
 1. Open this folder in Android Studio and let Gradle sync.
 2. Pick the `app` run configuration, choose an emulator or a connected device (USB debugging on), and press **Run**.

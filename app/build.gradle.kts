@@ -2,6 +2,8 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 // Release signing details live in keystore.properties (git-ignored). Without it, release builds are simply unsigned.
@@ -31,7 +33,7 @@ android {
         applicationId = "com.conley.echoloop"
         minSdk = 24
         targetSdk = 37
-        versionCode = 4
+        versionCode = 5
         versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -57,6 +59,8 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
